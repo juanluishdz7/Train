@@ -17,7 +17,7 @@ $("#add-train-btn").on("click", function(event) {
 
   var train = $("#trainame-input").val().trim();
   var dest = $("#dest-input").val().trim();
-  var ttime = moment($("#ttime-input").val(), "HH:mm").format("HH:mm");
+  var ttime = $("#ttime-input").val().trim();
   var freq = $("#freq-input").val().trim();
 
   var newtrain = {
@@ -43,20 +43,17 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey){
   var dest = childSnapshot.val().dest;
   var ttime = childSnapshot.val().time;
   var freq = childSnapshot.val().freq;
-  var trainT = moment(ttime, "HH:mm");
-  var arrival = trainT.format("HH:mm");
-  console.log(arrival)
-  var away = trainT.diff(currentTime, "m");
-  console.log(away)
+
+  var timeconv = moment(ttime, "HH:mm").subtract(1, "years");  
+  var trainDiff = moment().diff(moment(timeconv), "m");
+  var trainRe = trainDiff % freq;
+  var minArr = freq - trainRe;
+  var next = moment().add(minArr, "m").format("HH:mm");
 
   var currentTime = moment().format("HH:mm");
 
-  var next = moment(arrival, "HH:mm").add(freq, "minutes").format("HH:mm");
-  console.log(next);
-
-
   $(".lead").text("Current Time:" + currentTime);
   $("#schedule > tbody").append("<tr><td>" + train + "</td><td>" + dest + "</td><td>" +
-  freq + "</td><td>" + next + "</td><td>" + away + "</td></tr>");
+  freq + "</td><td>" + next + "</td><td>" + minArr + "</td></tr>");
 
 })
