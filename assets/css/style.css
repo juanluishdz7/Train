@@ -1,0 +1,12 @@
+body {
+  background-color: slategrey;
+  font-family: sans-serif;
+}
+.card-primary {
+  background-color:  #e9ecef;
+  align-content: center;
+}
+
+.lead {
+  font-weight: bold;
+}
